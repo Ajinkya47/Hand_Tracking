@@ -50,7 +50,8 @@ class HandTracker:
         largest_contour = max(contours, key=cv2.contourArea)
         
         # Filter out small contours (noise)
-        if cv2.contourArea(largest_contour) < 1000:
+        # Lowered threshold to 400 to detect folded hands/fingers
+        if cv2.contourArea(largest_contour) < 400:
             return None
         
         return largest_contour
@@ -122,6 +123,8 @@ class HandTracker:
         contour = self.find_hand_contour(skin_mask)
         
         if contour is None:
+            # FIX: Reset previous center immediately so blue dot disappears
+            self.previous_center = None
             return None, skin_mask
         
         # Get hand position (center or fingertip)

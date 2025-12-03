@@ -20,7 +20,9 @@ class StateManager:
         """Classify interaction state based on distance"""
         if distance > SAFE_THRESHOLD:
             new_state = State.SAFE
-        elif distance > WARNING_THRESHOLD:
+        # FIX: Ensure WARNING state covers the gap between SAFE and DANGER
+        # DANGER state now only triggers when distance <= DANGER_THRESHOLD (30px)
+        elif distance > DANGER_THRESHOLD:
             new_state = State.WARNING
         else:
             new_state = State.DANGER
@@ -35,7 +37,7 @@ class StateManager:
             self.state_counter = 0
         
         return self.current_state
-    
+
     def get_state_color(self):
         """Get color corresponding to current state"""
         if self.current_state == State.SAFE:

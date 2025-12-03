@@ -28,7 +28,8 @@ class Visualizer:
         
         # Draw danger warning if in DANGER state
         if state_manager.get_state_text() == "DANGER":
-            self.draw_danger_warning(frame)
+            # BUG FIX: Must assign the result back to 'frame'
+            frame = self.draw_danger_warning(frame)
         
         return frame
     
@@ -37,7 +38,9 @@ class Visualizer:
         # Create semi-transparent red overlay
         overlay = frame.copy()
         cv2.rectangle(overlay, (0, 0), (self.frame_width, self.frame_height), 
-                     COLOR_DANGER, -1)
+                  COLOR_DANGER, -1)
+        
+        # This function creates a NEW frame, so we must return it
         frame = cv2.addWeighted(overlay, 0.3, frame, 0.7, 0)
         
         # Draw large DANGER text
